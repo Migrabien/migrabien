@@ -96,7 +96,7 @@ export default function Footer() {
 
         <div className="border-t mt-12 pt-8 flex flex-col items-center">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} MigraBien. Todos los derechos reservados. <span className="ml-2">v1.2.0</span>
+            © {new Date().getFullYear()} MigraBien. Todos los derechos reservados. <span className="ml-2">v1.2.1</span>
           </p>
           <div className="flex space-x-4 mt-4">
             <Link href="#" className="text-gray-500 hover:text-teal-600">

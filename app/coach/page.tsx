@@ -186,51 +186,53 @@ export default function CoachPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 py-12 bg-gray-50">
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-teal-700 mb-4">
+      <main className="flex-1 py-6 sm:py-8 md:py-12 bg-gray-50">
+        <div className="container mx-auto px-2 sm:px-4 md:px-6 max-w-5xl">
+          <div className="text-center mb-6 sm:mb-8 md:mb-10">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter text-teal-700 mb-2 sm:mb-4">
               Tu Coach de Viaje Personal
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               Obtén respuestas personalizadas a todas tus dudas sobre el proceso migratorio
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             <div className="lg:col-span-2">
               <Card className="border shadow-sm h-full flex flex-col">
                 <Tabs defaultValue="chat" className="flex-1 flex flex-col" value={activeTab} onValueChange={setActiveTab}>
-                  <CardHeader className="pb-0">
+                  <CardHeader className="pb-0 px-3 sm:px-4 md:px-6 pt-3 sm:pt-4 md:pt-6">
                     <div className="flex justify-between items-center">
-                      <CardTitle>Coach MigraBien</CardTitle>
-                      <TabsList>
-                        <TabsTrigger value="chat">Chat</TabsTrigger>
-                        <TabsTrigger value="roadmap">Mi Roadmap</TabsTrigger>
+                      <CardTitle className="text-lg sm:text-xl">Coach MigraBien</CardTitle>
+                      <TabsList className="h-8 sm:h-9">
+                        <TabsTrigger value="chat" className="text-xs sm:text-sm px-2 sm:px-3">Chat</TabsTrigger>
+                        <TabsTrigger value="roadmap" className="text-xs sm:text-sm px-2 sm:px-3">Mi Roadmap</TabsTrigger>
                       </TabsList>
                     </div>
-                    <CardDescription>Resuelve todas tus dudas sobre el proceso migratorio</CardDescription>
+                    <CardDescription className="text-xs sm:text-sm">Resuelve todas tus dudas sobre el proceso migratorio</CardDescription>
                   </CardHeader>
-                  <TabsContent value="chat" className="flex-1 flex flex-col mt-0 px-4 pt-0 pb-4">
-                    <CardContent className="flex-1 overflow-y-auto pt-4">
-                      <div className="space-y-4">
+                  <TabsContent value="chat" className="flex-1 flex flex-col mt-0 px-2 sm:px-4 pt-0 pb-2 sm:pb-4">
+                    <CardContent className="flex-1 overflow-y-auto pt-2 sm:pt-4 px-0 sm:px-2">
+                      <div className="space-y-3 sm:space-y-4">
                         {messages.map((message) => (
                           <div
                             key={message.id}
                             className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
                           >
                             <div
-                              className={`flex items-start gap-2 max-w-[80%] ${
+                              className={`flex items-start gap-1 sm:gap-2 max-w-[90%] sm:max-w-[85%] md:max-w-[80%] ${
                                 message.type === "user" ? "flex-row-reverse" : ""
                               }`}
                             >
-                              <Avatar className={message.type === "user" ? "bg-teal-600" : "bg-gray-200"}>
+                              <Avatar className={`${message.type === "user" ? "bg-teal-600" : "bg-gray-200"} h-6 w-6 sm:h-8 sm:w-8`}>
                                 <AvatarFallback>
-                                  {message.type === "user" ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
+                                  {message.type === "user" ? 
+                                    <User className="h-3 w-3 sm:h-4 sm:w-4" /> : 
+                                    <Bot className="h-3 w-3 sm:h-4 sm:w-4" />}
                                 </AvatarFallback>
                               </Avatar>
                               <div
-                                className={`rounded-lg p-3 text-sm ${
+                                className={`rounded-lg p-2 sm:p-3 text-xs sm:text-sm ${
                                   message.type === "user"
                                     ? "bg-teal-600 text-white"
                                     : "bg-gray-100 text-gray-800 border border-gray-200"
@@ -238,7 +240,7 @@ export default function CoachPage() {
                               >
                                 <div className="whitespace-pre-wrap">{message.content}</div>
                                 <div
-                                  className={`text-xs mt-1 ${
+                                  className={`text-[10px] sm:text-xs mt-1 ${
                                     message.type === "user" ? "text-teal-100" : "text-gray-500"
                                   }`}
                                 >
@@ -253,17 +255,17 @@ export default function CoachPage() {
                         ))}
                         {isLoading && (
                           <div className="flex justify-start">
-                            <div className="flex items-start gap-2 max-w-[80%]">
-                              <Avatar className="bg-gray-200">
+                            <div className="flex items-start gap-1 sm:gap-2 max-w-[90%] sm:max-w-[85%] md:max-w-[80%]">
+                              <Avatar className="bg-gray-200 h-6 w-6 sm:h-8 sm:w-8">
                                 <AvatarFallback>
-                                  <Bot className="h-5 w-5" />
+                                  <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </AvatarFallback>
                               </Avatar>
-                              <div className="rounded-lg p-3 text-sm bg-gray-100 text-gray-800 border border-gray-200">
-                                <div className="flex items-center space-x-2">
-                                  <div className="h-2 w-2 bg-teal-600 rounded-full animate-bounce"></div>
-                                  <div className="h-2 w-2 bg-teal-600 rounded-full animate-bounce delay-100"></div>
-                                  <div className="h-2 w-2 bg-teal-600 rounded-full animate-bounce delay-200"></div>
+                              <div className="rounded-lg p-2 sm:p-3 text-xs sm:text-sm bg-gray-100 text-gray-800 border border-gray-200">
+                                <div className="flex items-center space-x-1 sm:space-x-2">
+                                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-teal-600 rounded-full animate-bounce"></div>
+                                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-teal-600 rounded-full animate-bounce delay-100"></div>
+                                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-teal-600 rounded-full animate-bounce delay-200"></div>
                                 </div>
                               </div>
                             </div>
@@ -272,21 +274,22 @@ export default function CoachPage() {
                         <div ref={messagesEndRef} />
                       </div>
                     </CardContent>
-                    <div className="p-4 border-t">
-                      <form onSubmit={handleSendMessage} className="flex gap-2">
+                    <div className="p-2 sm:p-3 md:p-4 border-t">
+                      <form onSubmit={handleSendMessage} className="flex gap-1 sm:gap-2">
                         <Input
                           placeholder="Escribe tu mensaje..."
                           value={input}
                           onChange={(e) => setInput(e.target.value)}
-                          className="flex-1"
+                          disabled={isLoading}
+                          className="flex-1 h-9 sm:h-10 text-sm"
                         />
-                        <Button type="submit" size="icon" disabled={isLoading}>
-                          <Send className="h-4 w-4" />
+                        <Button type="submit" size="icon" className="h-9 w-9 sm:h-10 sm:w-10" disabled={isLoading}>
+                          <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Button>
                       </form>
                     </div>
                   </TabsContent>
-                  <TabsContent value="roadmap" className="flex-1 overflow-y-auto mt-0 p-4">
+                  <TabsContent value="roadmap" className="flex-1 overflow-y-auto mt-0 p-2 sm:p-3 md:p-4">
                     <div className="space-y-6">
                       <div className="text-center mb-6">
                         <h3 className="text-xl font-bold text-teal-700">Tu Plan Migratorio Personalizado</h3>
@@ -421,53 +424,53 @@ export default function CoachPage() {
               </Card>
             </div>
 
-            <div className="hidden lg:block">
+            <div className="mt-4 lg:mt-0 lg:block">
               <Card className="border shadow-sm">
-                <CardHeader>
-                  <CardTitle>Características del Coach</CardTitle>
-                  <CardDescription>Tu asistente inteligente para migrar</CardDescription>
+                <CardHeader className="px-3 sm:px-4 md:px-6 pt-3 sm:pt-4 md:pt-6 pb-2 sm:pb-3 md:pb-4">
+                  <CardTitle className="text-lg sm:text-xl">Características del Coach</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">Tu asistente inteligente para migrar</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
-                      <Bot className="h-5 w-5" />
+                <CardContent className="space-y-4 sm:space-y-6 px-3 sm:px-4 md:px-6 pt-0">
+                  <div className="flex items-start gap-2 sm:gap-4">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
+                      <Bot className="h-4 w-4 sm:h-5 sm:w-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Asistente IA</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-medium text-sm sm:text-base">Asistente IA</h3>
+                      <p className="text-xs sm:text-sm text-gray-500">
                         Respuestas precisas y actualizadas sobre procesos migratorios
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
-                      <FileText className="h-5 w-5" />
+                  <div className="flex items-start gap-2 sm:gap-4">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
+                      <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Información de documentos</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-medium text-sm sm:text-base">Información de documentos</h3>
+                      <p className="text-xs sm:text-sm text-gray-500">
                         Guía sobre los documentos necesarios para cada etapa del proceso
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-5 w-5" />
+                  <div className="flex items-start gap-2 sm:gap-4">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Roadmap personalizado</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-medium text-sm sm:text-base">Roadmap personalizado</h3>
+                      <p className="text-xs sm:text-sm text-gray-500">
                         Plan migratorio adaptado a tus necesidades específicas
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
-                      <Lock className="h-5 w-5" />
+                  <div className="flex items-start gap-2 sm:gap-4">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
+                      <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Respuestas personalizadas</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-medium text-sm sm:text-base">Respuestas personalizadas</h3>
+                      <p className="text-xs sm:text-sm text-gray-500">
                         Obtén información específica según tu país de origen, destino y situación personal
                       </p>
                     </div>
