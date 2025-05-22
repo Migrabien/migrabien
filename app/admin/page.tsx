@@ -86,6 +86,14 @@ const initialUsers: UserProfile[] = [
     priority: "high",
     status: "active",
     notes: "Tiene dudas sobre los requisitos para su visa de emprendedor",
-  },
-  {
-    i
+  }
+];
+
+export default function AdminPage() {
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Panel de Administración</h1>
+      <p>Página en construcción. Aquí irá el panel de administración.</p>
+    </div>
+  );
+}
