@@ -35,7 +35,7 @@ export default function Home() {
               </div>
               <div className="relative">
                 <img
-                  src="/diverse-latin-americans-europe-map.png"
+                  src="https://web3.cl/timhub/migrabien-banner.jpg"
                   alt="Personas planificando su migración"
                   className="mx-auto rounded-lg shadow-lg"
                   width={600}
