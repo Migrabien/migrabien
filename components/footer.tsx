@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 border-t">
+    <footer className="bg-gray-50 border-t text-center">
       <div className="container px-4 md:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
@@ -94,11 +94,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t mt-12 pt-8 flex flex-col items-center">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} MigraBien. Todos los derechos reservados. <span className="ml-2">v1.1.2</span>
+            © {new Date().getFullYear()} MigraBien. Todos los derechos reservados. <span className="ml-2">v1.1.3</span>
           </p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
+          <div className="flex space-x-4 mt-4">
             <Link href="#" className="text-gray-500 hover:text-teal-600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
