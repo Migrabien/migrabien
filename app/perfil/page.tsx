@@ -1,19 +1,127 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User, MapPin, Briefcase, FileText, Calendar, ArrowRight } from "lucide-react"
+import { User, MapPin, Briefcase, FileText, Calendar, ArrowRight, Edit, Save, X } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useToast } from "@/components/ui/use-toast"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import ProtectedRoute from "@/components/protected-route"
 import { useAuth } from "@/contexts/auth-context"
+import { getUserProfile, updateUserProfile, UserProfile } from "@/lib/firestore"
 import Link from "next/link"
 
 export default function PerfilPage() {
   const { user } = useAuth()
+  const { toast } = useToast()
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [formData, setFormData] = useState({
+    nombre: "",
+    paisOrigen: "",
+    paisDestino: "",
+    motivoMigracion: "",
+    nivelEducativo: "",
+    experienciaLaboral: "",
+    estadoDocumentos: ""
+  })
+  
+  // Cargar datos del perfil desde Firestore
+  useEffect(() => {
+    async function loadUserProfile() {
+      if (user?.id) {
+        try {
+          setIsLoading(true)
+          const profile = await getUserProfile(user.id)
+          setUserProfile(profile)
+          
+          // Inicializar el formulario con los datos del perfil
+          if (profile) {
+            setFormData({
+              nombre: profile.nombre || "",
+              paisOrigen: profile.paisOrigen || "",
+              paisDestino: profile.paisDestino || "",
+              motivoMigracion: profile.motivoMigracion || "",
+              nivelEducativo: profile.nivelEducativo || "",
+              experienciaLaboral: profile.experienciaLaboral || "",
+              estadoDocumentos: profile.estadoDocumentos || ""
+            })
+          }
+        } catch (error) {
+          console.error("Error al cargar el perfil:", error)
+          toast({
+            title: "Error",
+            description: "No se pudo cargar la información del perfil",
+            variant: "destructive"
+          })
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+    
+    loadUserProfile()
+  }, [user?.id, toast])
+  
+  // Manejar cambios en el formulario
+  const handleChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+  
+  // Guardar cambios en el perfil
+  const handleSaveProfile = async () => {
+    if (!user?.id) return
+    
+    try {
+      setIsLoading(true)
+      await updateUserProfile(user.id, formData)
+      
+      // Actualizar el perfil local
+      setUserProfile(prev => prev ? { ...prev, ...formData } : null)
+      
+      toast({
+        title: "Perfil actualizado",
+        description: "Tu información ha sido actualizada correctamente"
+      })
+      
+      setIsEditing(false)
+    } catch (error) {
+      console.error("Error al actualizar el perfil:", error)
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar la información del perfil",
+        variant: "destructive"
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
+  // Calcular el progreso del perfil
+  const calculateProfileProgress = () => {
+    if (!userProfile) return 0
+    
+    const fields = [
+      userProfile.nombre,
+      userProfile.paisOrigen,
+      userProfile.paisDestino,
+      userProfile.motivoMigracion,
+      userProfile.nivelEducativo,
+      userProfile.experienciaLaboral,
+      userProfile.estadoDocumentos
+    ]
+    
+    const filledFields = fields.filter(field => field && field.trim() !== "").length
+    return Math.round((filledFields / fields.length) * 100)
+  }
 
   // Función para obtener el nombre del país en español
   const getPaisNombre = (paisCodigo: string) => {
@@ -102,7 +210,10 @@ export default function PerfilPage() {
                   <CardHeader className="pb-2">
                     <div className="flex flex-col items-center">
                       <Avatar className="h-24 w-24 mb-4">
-                        <AvatarImage src="/diverse-person-avatars.png" alt="Foto de perfil" />
+                        <AvatarImage 
+                          src={userProfile?.photoURL || "/diverse-person-avatars.png"} 
+                          alt="Foto de perfil" 
+                        />
                         <AvatarFallback>
                           <User className="h-12 w-12" />
                         </AvatarFallback>
@@ -146,10 +257,65 @@ export default function PerfilPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-6">
-                      <Button variant="outline" className="w-full">
-                        Editar perfil
-                      </Button>
+                    <div className="flex justify-end">
+                      {!isEditing ? (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => setIsEditing(true)}
+                          disabled={isLoading}
+                        >
+                          <Edit className="h-4 w-4 mr-1" /> Editar
+                        </Button>
+                      ) : (
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => setIsEditing(false)}
+                            disabled={isLoading}
+                          >
+                            <X className="h-4 w-4 mr-1" /> Cancelar
+                          </Button>
+                          <Button 
+                            variant="default" 
+                            size="sm"
+                            onClick={handleSaveProfile}
+                            disabled={isLoading}
+                            className="bg-teal-600 hover:bg-teal-700"
+                          >
+                            {isLoading ? (
+                              <span className="flex items-center">
+                                <svg
+                                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  ></path>
+                                </svg>
+                                Guardando...
+                              </span>
+                            ) : (
+                              <>
+                                <Save className="h-4 w-4 mr-1" /> Guardar
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -159,8 +325,15 @@ export default function PerfilPage() {
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg text-teal-700">Mi Progreso Migratorio</CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-0">
                     <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-sm font-medium">Progreso del perfil</span>
+                          <span className="text-sm text-gray-500">{calculateProfileProgress()}%</span>
+                        </div>
+                        <Progress value={calculateProfileProgress()} className="h-2" />
+                      </div>
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Documentación</span>
