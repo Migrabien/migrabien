@@ -1,11 +1,13 @@
 import OpenAI from 'openai';
 
-// Inicializar el cliente de OpenAI
-// La API key se debe proporcionar como variable de entorno
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true, // Solo para desarrollo, no recomendado en producción
-});
+// Función para obtener el cliente de OpenAI solo cuando se necesite
+// Esto evita que se inicialice durante la fase de construcción
+export function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true, // Solo para desarrollo, no recomendado en producción
+  });
+}
 
 // Función para generar respuestas del coach utilizando GPT
 export async function generateCoachResponse(
@@ -13,6 +15,7 @@ export async function generateCoachResponse(
   chatHistory: { role: 'user' | 'assistant', content: string }[]
 ) {
   try {
+    const openai = getOpenAIClient();
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo", // Usando gpt-3.5-turbo que es más accesible
       messages: [

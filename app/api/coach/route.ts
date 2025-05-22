@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { getOpenAIClient } from '@/lib/openai';
 
-// Inicializar OpenAI con tu API key
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// No inicializamos OpenAI aquí para evitar errores durante la construcción
 
 // ID del asistente personalizado creado en la plataforma de OpenAI
 const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID || 'asst_5O5kyju5xpi1nhTZGGOSgiJw';
@@ -19,6 +17,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Inicializar el cliente OpenAI solo cuando se necesite
+    const openai = getOpenAIClient();
 
     let thread;
     
@@ -58,13 +59,13 @@ export async function POST(req: NextRequest) {
     const messages = await openai.beta.threads.messages.list(thread.id);
     
     // Obtener la última respuesta del asistente
-    const assistantMessages = messages.data.filter(msg => msg.role === 'assistant');
+    const assistantMessages = messages.data.filter((msg: any) => msg.role === 'assistant');
     const lastMessage = assistantMessages[0];
     
     // Extraer el contenido del mensaje
     let responseContent = '';
     if (lastMessage && lastMessage.content && lastMessage.content.length > 0) {
-      const textContent = lastMessage.content.find(content => content.type === 'text');
+      const textContent = lastMessage.content.find((content: any) => content.type === 'text');
       if (textContent && 'text' in textContent && textContent.text.value) {
         responseContent = textContent.text.value;
       }
