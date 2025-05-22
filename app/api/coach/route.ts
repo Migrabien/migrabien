@@ -7,7 +7,7 @@ const openai = new OpenAI({
 });
 
 // ID del asistente personalizado creado en la plataforma de OpenAI
-const ASSISTANT_ID = 'asst_5O5kyju5xpi1nhTZGGOSgiJw';
+const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID || 'asst_5O5kyju5xpi1nhTZGGOSgiJw';
 
 export async function POST(req: NextRequest) {
   try {
